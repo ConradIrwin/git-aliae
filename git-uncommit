@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Git uncommit allows you to remove changes from your previous commit,
+# without loosing any unstaged changes you may have.
+# When called with no arguments, removes the entire commit (git reset HEAD^)
+# When called with <filename>, removes changes to that file from the commit.
+# Also useful is  git uncommit -p, which allows you to select which chunks to uncommit.
+#
+if [ "$#" = 0 ]; then
+    git reset HEAD^
+else
+    [ "$(git stash)" = "No local changes to save" ]
+    stash_failed=$?
+    git checkout HEAD^ "$@"
+    git commit -a --amend -C HEAD --no-verify
+    [ $stash_failed = 0 ] || git stash pop
+    git apply <(git diff HEAD HEAD@{1})
+fi

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Lists files that have been deleted along with the relevant commit.
+# Arguments are passed to git-log to limit which commits are looked at.
+git log --diff-filter=D --summary --format=format:%h "$@" | sed '/^ /!{x;d};G;s/ delete mode [0-7]* \(.*\)\n\(.*\)/\2  \1/g'

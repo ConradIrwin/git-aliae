@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# choose changed file to edit
+
+select FILE in `git status --porcelain | sed 's/...//'`; do
+    vi "$FILE"
+    break
+done

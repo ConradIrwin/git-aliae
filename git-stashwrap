@@ -1,0 +1,4 @@
+#!/bin/bash
+
+STASHED="$(git stash)"
+git "$@" && [ "$STASHED" = "No local changes to save" ] || git stash pop

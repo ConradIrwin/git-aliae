@@ -1,0 +1,2 @@
+#!/bin/bash
+find . -name '*.orig' -or -name '*.BACKUP.*' -or -name '*.BASE.*' -or -name '*.LOCAL.*' -or -name '*.REMOTE.*' | xargs rm

@@ -1,0 +1,2 @@
+#!/bin/bash
+git log --diff-filter=A --summary --format=format:%h "$@" | sed '/^ /!{x;d};G;s/ create mode [0-7]* \(.*\)\n\(.*\)/\2  \1/g'

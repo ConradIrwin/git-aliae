@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+pattern="$1"
+shift
+
+Under="$(sed 's/\([a-z]\+\)\([A-Z][a-z]\+\)/\1_\l\2/g' <<<"$pattern")"
+under="$(sed 's/./\l&/g' <<<"$Under")"
+camel="$(sed 's/_\([A-Za-z]\)/\u\1/g' <<<"$under")"
+Camel="$(sed 's/./\u&/' <<<"$camel")"
+
+#echo git grep -e "$under" --or -e "$camel" --or -e "$Camel"
+git grep -e "$under" --or -e "$Under" --or -e "$camel" --or -e "$Camel"

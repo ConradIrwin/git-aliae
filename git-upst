@@ -1,0 +1,2 @@
+#!/bin/bash
+git rev-parse --verify --quiet '@{u}' 2>/dev/null ||  git symbolic-ref HEAD | sed 's,refs/heads,origin,'

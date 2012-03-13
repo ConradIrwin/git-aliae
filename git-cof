@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+TMPFILE=`tempfile`
+
+[ -f .git/index ] || echo "${gitindex?Not a git repository?}"
+
+cp .git/index $TMPFILE
+
+GIT_INDEX_FILE=$TMPFILE git add . -u
+echo $(GIT_INDEX_FILE=$TMPFILE git write-tree) $(git whereami) $(git log -1 --oneline) >> .git/tree_backups
+git checkout -f "$@"
+rm $TMPFILE

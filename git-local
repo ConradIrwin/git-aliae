@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Have to set the number of local commits here: i.e. how many commits are
+# there in the floating branch?
+# Thus you have to tweak the script each time you add or remove a commit to
+# your floating branch.
+# TODO find a way to detect the number of commits at runtime.
+
+NUM_LOCAL_COMMITS=1
+
+GIT=`which git`
+command="$1"; shift
+
+case "$command" in
+  co|checkout)
+    exec "$GIT" rebase --onto "$1" local~$NUM_LOCAL_COMMITS local
+    ;;
+
+  merge)
+    merging_into="$1"; shift
+    "$GIT" checkout "$merging_into" && "$GIT" merge "$@" && exec "$0" checkout "$merging_into"
+    ;;
+
+  merge-feature)
+    merging_into="$1"; shift
+    "$GIT" checkout "$merging_into" && "$GIT" merge-feature "$1" && exec "$0" checkout "$merging_into"
+    ;;
+
+  *)
+    echo "Don't know how to $command with a floating branch" >&2
+    exit 1
+    ;;
+esac

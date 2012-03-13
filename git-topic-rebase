@@ -1,0 +1,2 @@
+git rebase --onto "${1?usage: git topic-rebase <master> <integration>}" $(git topic-base "${2?usage:
+git topic-rebase <master> <integration>}")

@@ -1,0 +1,2 @@
+#!/bin/bash
+git reflog | cut -d' ' -f1 | xargs git plog --no-walk "$@"

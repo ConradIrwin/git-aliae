@@ -1,0 +1,3 @@
+#!/bin/bash
+
+git merge-base ${1:-HEAD} $(git for-each-ref --format '%(refname)' refs/remotes/)

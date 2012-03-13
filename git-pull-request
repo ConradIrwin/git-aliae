@@ -1,0 +1,2 @@
+base=$(git remote -v | sed -n 's,.*\@\(github.com\):*\(.*\).git.*,http://\1\2,p;T;q')
+${BROWSER-x-www-browser} "$base/pull/new/$(git-symbolic-ref HEAD | sed 's!.*/!!')"

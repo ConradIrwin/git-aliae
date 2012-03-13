@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+remote=${1:-origin}
+
+for branch in $(git branch -a --merged $remote/master | sed -n "/shelf\\|HEAD/b;/remotes\\/$remote/p")
+do
+    open="%C(magenta)[3m"
+    close="[0m"
+
+    echo "$(git log -1 --format="* %C(red)%aN%Creset ($open${branch#remotes/$remote/}$close)  %Creset%cr%Creset" $branch)"
+done
+
+for branch in $(git branch -a --no-merged $remote/master | sed -n "/shelf\\|HEAD/b;/remotes\\/$remote/p")
+do
+    open="%C(green)"
+    close="%Creset"
+
+    echo "$(git log -1 --format="* %C(red)%aN%Creset ($open${branch#remotes/$remote/}$close)  %Creset%cr%Creset" $branch)"
+done

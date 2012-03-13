@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# switch hold and line, delete empty line that was in hold so nothing is printed.
+# print line, switch hold and line, and then implicitly print the line again.
+EDITOR="sed -i '1{x;d};2{p;x}'" git rebase -i HEAD~2

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if git rev-parse -q --verify "$1" > /dev/null; then
+    pth="/commit/$(git rev-parse "$1")"
+elif [ "$1" ]; then
+    # Allow git hub /wiki
+    pth="$1"
+else
+    pth="/"
+fi
+# p;T;q = print the first match Then quit 
+base=$(git remote -v | sed -n 's,.*\@\(github.com\):*\(.*\).git.*,http://\1\2,p;T;q')
+${BROWSER-x-www-browser} "$base/$pth"

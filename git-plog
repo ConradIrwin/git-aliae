@@ -1,0 +1,2 @@
+#!/bin/bash
+git log --graph --format='%Cgreen%h %Cred%aN%Cblue%d %Creset%s %C(yellow)(%cr)%Creset' "$@"

@@ -1,0 +1,1 @@
+git plog $(git topic-merge "$@") HEAD --not $(git topic-base "$@")^@

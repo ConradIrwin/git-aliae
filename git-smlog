@@ -1,0 +1,1 @@
+git plog ${1-master} ${2-HEAD} $3 $4 $5 --not $(git show-branch --merge-base ${1-master} ${2-HEAD} $3 $4 $5 | sed 's/ /^@ /g')^@

@@ -1,0 +1,1 @@
+git plog --all --author=Conrad --since='9 days ago'

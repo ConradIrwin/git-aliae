@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "$#" = 0 ];then 
+    git merge-base master HEAD
+elif [ "$2" = ""  -o  \( \( "$1" = "-a" -o "$1" = "--all" \) -a "$3" = "" \) ]; then
+    git merge-base "$@" HEAD
+else
+    git merge-base "$@"
+fi

@@ -1,0 +1,12 @@
+#!/bin/zsh -e
+#
+# Switch the two most-recent *trees*, but keep the commits otherwise the same.
+# This is useful in the case you want to split one commit into two but if you
+# hate the "e" mode of git uncommit -p.
+#
+# Instead you just edit your working tree until it represents the commit you'd
+# like to insert into the history, commit that, switch trees, and then work out
+# how to fix the commit messages :p.
+first=$(git commit-tree $(git rev-parse HEAD^^{tree}) -p $(git rev-parse HEAD^^) <<(git log -1 --format=%B HEAD))
+second=$(git commit-tree $(git rev-parse HEAD^{tree}) -p $first <<(git log -1 --format=%B HEAD^))
+git reset $second --keep

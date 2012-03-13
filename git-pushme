@@ -1,0 +1,4 @@
+#!/bin/bash
+remote=`shift`
+echo git push -u ${remote:-origin} `git symbolic-ref HEAD` "$@"
+git push -u ${remote:-origin} HEAD "$@"

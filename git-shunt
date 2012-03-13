@@ -1,0 +1,12 @@
+#!/bin/bash -e
+#
+# usage: git shunt <branch>
+# 
+# moves the most recent commit to the other branch
+# (useful if you've just realised that you committed in the wrong place!)
+if git rev-parse --verify "$1" >/dev/null
+then
+    git reset HEAD^ --keep
+    git checkout -m "$1"
+    git cherry-pick "HEAD@{2}"
+fi

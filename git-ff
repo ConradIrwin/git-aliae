@@ -1,0 +1,3 @@
+#!/bin/bash
+
+git merge `git upst` --ff-only "$@"

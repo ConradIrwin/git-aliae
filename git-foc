@@ -1,0 +1,8 @@
+#!/bin/bash
+
+TMPFILE=`tempfile`
+GIT_INDEX_FILE=$TMPFILE git read-tree $(echo $'$p\n$d\nwq' | ed -s .git/tree_backups | cut -d' ' -f1)
+
+GIT_INDEX_FILE=$TMPFILE git checkout -m .
+GIT_INDEX_FILE=$TMPFILE git reset HEAD
+rm $TMPFILE

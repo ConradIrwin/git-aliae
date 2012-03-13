@@ -1,0 +1,62 @@
+#!/usr/bin/ruby
+require 'rubygems'
+require 'json'
+branch_names = {}
+branches =  `git branch | grep -v ' ->'`.strip.split(/\n../).map do |x| 
+  hash = `git rev-parse #{x}`.strip 
+  branch_names[hash] = x
+  hash
+end
+
+size = 0
+
+bases = {}
+
+while branches.size != size
+  size = branches.size
+
+  pairs = branches.inject([]) do |inj,b1| branches.inject(inj) do |inj,b2| (b1 == b2) ? inj : (inj << [b1,b2]) end end.map(&:sort).uniq
+
+  pairs.inject(bases) do |hash,(b1, b2)|
+    if hash[[b1,b2]]
+      hash
+    else
+      hash.update([b1,b2] => `git merge-base #{b1} #{b2}`.strip)
+    end
+  end
+
+  branches += bases.values
+  branches.uniq!
+end
+
+branches.each do |x|
+  branch_names[x] =  `git log --oneline #{x} | head -n 1`.strip unless branch_names[x]
+end
+
+edges = {}
+
+bases.each do |ps, c|
+
+  ps.each do |p|
+    if c != p
+      if b = edges[p]
+        if bases[ [b,c].sort ] == b
+          edges[p] = c
+        end
+      else
+        edges[p] = c
+      end
+    end
+  end
+
+end
+
+
+puts "digraph G {"
+
+  edges.each do |x,y|
+
+    puts "#{branch_names[x].to_json} -> #{branch_names[y].to_json}"
+  end
+
+puts "}"

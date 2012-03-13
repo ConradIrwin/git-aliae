@@ -1,0 +1,3 @@
+#!/bin/zsh -e
+git commit --fixup $@
+GIT_EDITOR=: git rebase -i $1^

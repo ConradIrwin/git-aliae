@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+head=$(git symbolic-ref HEAD)
+head_commit=$(git rev-parse HEAD)
+other=${1:?meh}
+merge=$(git rev-parse --verify "$2")
+
+echo "Remerging $other into $head at $merge"
+echo "(currently $head == $head_commit)"
+
+if [ "$(git merge-base $head $other)" = "$(git rev-parse $other)" ];
+then
+    echo "Merge up-to-date"
+    exit 1
+fi
+
+if [ "$(git rev-list --no-walk --parents $merge | wc -w)" != "3" ]
+then
+    echo "$2 was not a merge?"
+    exit 1
+fi
+
+git reset --hard $merge^
+git merge $other
+newhead=$(git rev-parse HEAD)
+git reset --hard $head_commit
+git rebase --onto $newhead $merge

@@ -1,0 +1,9 @@
+#!/bin/zsh -e
+project_name="$(git remote -v | sed -n "/github.com/{s~.*/\([^/]\+\) (.*~\1~p;q}"| sed 's/\.git//')"
+
+: ${project_name?Could not guess project name, do you have a github remote?}
+: ${1?Usage: git fetch-fork <forkname>}
+
+git remote add "$1" "https://github.com/${1?Usage: git fetch-fork <forkname>}/${project_name?Could not guess project name, do you have a github remote?}.git"
+
+git fetch "$1"
