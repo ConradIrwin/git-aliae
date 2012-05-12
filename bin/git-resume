@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# The counterpart to git-pause, moves changes from a PAUSE commit into the working tree.
+# This is used when you want to resume working on a branch after a context switch.
+#
+# see-also: git-pause
+if git log -1 --format="%s" | grep -q '^PAUSED'
+then
+  git reset HEAD^
+else
+  echo "Latest commit was not created by git-pause, maybe you wanted to run \`git uncommit\`?"
+fi

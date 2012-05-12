@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# A wrapper around git-commit --amend that allows you to easily add new changes to the
+# previous commit.
+#
+# This is useful to ensure your commits always look awesome.
+#
+# You can call it with the same arguments as git-add:
+#
+#  git amend -p allows interactive selection of changes to add to the commit.
+#  git amend <filename>.. adds all changes to the given files to the commit.
+#
+# see also: git-uncommit
+
+git add "$@" && git commit -v --amend
