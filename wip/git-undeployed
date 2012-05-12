@@ -4,5 +4,5 @@ then
     git plog HEAD test/master profiles-test/master --not $(git show-branch --merge-base HEAD test/master profiles-test/master | sed 's/ /^@ /g')^@
 
 else
-    git plog {,production/,origin/,profiles/}master --not $(git show-branch --merge-base {,production/,origin/,profiles/}master | sed 's/ /^@ /g')^@
+    git plog {,production/,origin/,profiles/}master --not $(git show-branch --merge-base {,production/,origin/,profiles/}master | sed 's/ /^@ /g')^@ "$@"
 fi
