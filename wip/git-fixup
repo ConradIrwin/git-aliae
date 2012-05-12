@@ -1,3 +1,4 @@
 #!/bin/zsh -e
+rev=$(git rev-parse $1)
 git commit --fixup $@
-GIT_EDITOR=: git rebase -i $1^
+GIT_EDITOR=: git rebase -i $rev^
