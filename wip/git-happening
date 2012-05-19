@@ -1,5 +1,16 @@
 #!/bin/zsh
 
+# A little script to show you who's working on what.
+# Prints out a list of branches on 'origin' (or the remote you name)
+#
+# For each branch shows you who last committed to it, and when.
+#
+# It first prints branches that have already been merged into master (in pink),
+# and then branches that have not yet been merged (in green).
+#
+# I find it useful to go around and garbage collect the merged branches from
+# time to time.
+
 remote=${1:-origin}
 
 for branch in $(git branch -a --merged $remote/master | grep -v 'shelf\|HEAD' | sed -n "/remotes\\/$remote/p")
