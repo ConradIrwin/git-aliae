@@ -1,8 +1,11 @@
-#!/bin/zsh
-if [ "$1" = "test" ]
-then
-    git plog HEAD test/master profiles-test/master --not $(git show-branch --merge-base HEAD test/master profiles-test/master | sed 's/ /^@ /g')^@
+#!/bin/bash
 
+if [ $# = 0 ]
+then
+    branches="$(git remote -v | sed 's/\t.*/\/master/' | tr '\n' ' ')"
 else
-    git plog {,production/,origin/,profiles/}master --not $(git show-branch --merge-base {,production/,origin/,profiles/}master | sed 's/ /^@ /g')^@ "$@"
+    branches="$@"
 fi
+
+git plog HEAD $branches --not $(git show-branch --merge-base HEAD $branches  | sed 's/ /^@ /g')^@
+
