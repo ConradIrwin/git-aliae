@@ -1,12 +1,32 @@
 #!/bin/bash -e
 
-TMPFILE=`tempfile`
+# git-cof is a wrapper to git checkout -f that takes a backup of your current working
+# tree before removing changes therefrom.
 
-[ -f .git/index ] || echo "${gitindex?Not a git repository?}"
+OPWD=$(pwd)
+# move to top-level so we can refer to .git/ directly.
+# This line will also error if we're not in a git repository.
+cd $(git rev-parse --show-toplevel)
 
+# Create a temporary copy of the index file so that we can make
+# changes with impunity.
+mkdir -p .git/tmp/
+TMPFILE=`mktemp .git/tmp/cof.XXXXXX`
 cp .git/index $TMPFILE
 
+# Take a backup of all tracked files.
 GIT_INDEX_FILE=$TMPFILE git add . -u
-echo $(GIT_INDEX_FILE=$TMPFILE git write-tree) $(git whereami) $(git log -1 --oneline) >> .git/tree_backups
+TREE=$(GIT_INDEX_FILE=$TMPFILE git-write-tree)
+COMMIT=$(echo "Backup created by git-cof" | GIT_INDEX_FILE=$TMPFILE git commit-tree $TREE -p HEAD)
+
+# Write meta-data out so that it's possible to track what we've done.
+echo $COMMIT on $(git symbolic-ref HEAD) at $(git log -1 --oneline) >> .git/tree_backups
+echo $COMMIT > .git/last_cof
+
+# Run checkout from the original working directory so that file-names are resolved
+# correctly.
+cd $OPWD
 git checkout -f "$@"
+cd $(git rev-parse --show-toplevel)
+
 rm $TMPFILE
