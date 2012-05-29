@@ -25,19 +25,19 @@ Command list
 ------------
 
 Introduced in [Git aliae to make you more awesome](https://cirw.in/blog/git-aliae-1)
-* [git amend](https://github.com/ConradIrwin/git-aliae/blob/master/git-amend) — adds more
+* [git amend](https://github.com/ConradIrwin/git-aliae/blob/master/bin/git-amend) — adds more
   stuff to the most recent commit.
-* [git uncommit](https://github.com/ConradIrwin/git-aliae/blob/master/git-amend) — removes
+* [git uncommit](https://github.com/ConradIrwin/git-aliae/blob/master/bin/git-uncommit) — removes
   stuff from the most recent commit.
-* [git pause](https://github.com/ConradIrwin/git-aliae/blob/master/git-amend) — creates a
+* [git pause](https://github.com/ConradIrwin/git-aliae/blob/master/bin/git-pause) — creates a
   temporary commit on the current branch so you can context-switch.
-* [git resume](https://github.com/ConradIrwin/git-aliae/blob/master/git-amend) — dissolves
+* [git resume](https://github.com/ConradIrwin/git-aliae/blob/master/bin/git-resume) — dissolves
   the commits created by git pause so you can resume work.
 
 Introduced in [Git aliae so that you never lose work](https://cirw.in/blog/git-aliae-2)
-* [git cof](https://github.com/ConradIrwin/git-aliae/blob/master/git-amend) — wraps `git
+* [git cof](https://github.com/ConradIrwin/git-aliae/blob/master/bin/git-cof) — wraps `git
   checkout -f`, but saves your work first.
-* [git foc](https://github.com/ConradIrwin/git-aliae/blob/master/git-amend) — undoes the
+* [git foc](https://github.com/ConradIrwin/git-aliae/blob/master/bin/git-foc) — undoes the
   most recent `git cof`
 
 FAQ
