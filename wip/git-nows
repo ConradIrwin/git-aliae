@@ -18,10 +18,10 @@ git diff-index $head --cached --full-index -p > $to_index
 
 # recreate the working tree without whitespace errors (throws away the index)
 git reset $head --hard
-git apply $to_work --whitespace=fix
+[ -s $to_work ] && git apply $to_work --whitespace=fix
 
 # recreate the index without whitespace errors (preserves the working tree)
 git reset $head --mixed
-git apply $to_index --whitespace=fix --cached
+[ -s $to_index ] && git apply $to_index --whitespace=fix --cached
 
 rm $to_index $to_head
