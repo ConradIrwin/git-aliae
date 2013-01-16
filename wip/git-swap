@@ -1,5 +1,20 @@
 #!/bin/bash
 
-# switch hold and line, delete empty line that was in hold so nothing is printed.
-# print line, switch hold and line, and then implicitly print the line again.
-EDITOR="sed -i '1{x;d};2{p;x}'" git rebase -i HEAD~2
+# Switches the order of the two most recent commits.
+#
+# You should only do this if the commits are independent (or you'll get a merge
+# conflict). If you do get a merge conflict then `git rebase --abort` will save
+# you.
+#
+# See also: git-pop
+
+if [ "$1" = "--ed" ]
+then
+  ed -s $2 <<EOF
+1m2
+wq
+EOF
+
+else
+  EDITOR="$0 --ed" git rebase -i HEAD~2
+fi
