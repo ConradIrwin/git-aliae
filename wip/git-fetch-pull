@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# Fetch a pull request from github. Guesses the name of your repo from its `origin`
+# remote.
+#
+# e.g. git fetch-pull 8
+#
+# (relies on `wip/git-url` and `jq` for now)
+
+set -e
+
+t="$(mktemp XXXXX.json)"
+trap "rm $t" EXIT
+function json() {
+    cat $t | jq -r "$@"
+}
+
+echo "Fetching $(git url --api /pulls/$1)"
+curl -sS $(git url --api /pulls/$1) > $t
+
+if [ "$(json .message)" != "null" ]
+then
+    echo "$(json .message)"
+else
+    echo "Fetching $(json .head.label)"
+    git fetch "$(json .head.repo.clone_url)" "$(json .head.ref)"
+fi
