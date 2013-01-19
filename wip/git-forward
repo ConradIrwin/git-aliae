@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Move forward one step in history (towards more recent commits)
+#
+# If this commit has multiple children, the most recent one is chosen.
+git checkout $(git name-rev --name-only $(git rev-list --date-order --parents --all | grep " $(git rev-parse HEAD)" | head -n 1 | cut -d' ' -f1))

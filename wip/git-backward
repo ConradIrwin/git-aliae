@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Move back one step in history (towards older commits)
+#
+# If this commit has multiple parents, the first is chosen.
+
+git checkout $(git name-rev --name-only HEAD^)
