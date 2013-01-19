@@ -1,22 +1,4 @@
-#!/usr/bin/ruby
-
-arg = ARGV[0]
-
-path = if arg
-         `git rev-parse -q --verify #{arg} > /dev/null`
-         if $?.success?
-           "/commit/#{`git rev-parse #{arg}`}"
-         else
-           arg.gsub(%r{^/*}, '/')
-         end
-       else
-         "/"
-       end
-
-`git remote -v`.each_line do |line|
-  name, url = line.split("\t")
-  if name == "origin"
-    url =url.gsub(/github.*:([^ ]*) *.*/){ "https://github.com/#$1#{path}" }
-    exec 'x-www-browser', url
-  end
-end
+#!/bin/bash
+#
+# Opens the result of git-url in a browser
+x-www-browser $(git url "$@")

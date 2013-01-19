@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Generates a URL to github (mostly useful via git-hub)
+#
+# e.g.
+#
+# git url
+# => https://github.com/ConradIrwin/git-aliae
+#
+# git url HEAD
+# => https://github.com/ConradIrwin/git-aliae/commit/abcdef
+#
+# git url /issues
+# => https://github.com/ConradIrwin/git-aliae/issues
+#
+# git url --api /pulls/8
+# => https://api.github.com/repos/ConradIrwin/git-aliae/pulls/8
+# (used in git-fetch-pull)
+
+set -e
+
+if [ "$1" == "--api" ]
+then
+    BASE="https://api.github.com/repos"
+    shift
+else
+    BASE="https://github.com"
+fi
+
+if [ "$1" ]
+then
+    if git rev-parse -q --verify "$1" >/dev/null
+    then
+        TAIL="commit/$(git rev-parse "$1")"
+    else
+        TAIL="${1#/}"
+    fi
+else
+    TAIL=""
+fi
+
+# Sed should be able to extract foo/bar from:
+# git@github.com:foo/bar
+# git@github.com:foo/bar.git
+# https://github.com/foo/bar
+# https://github.com/foo/bar.git
+# github:foo/bar <-- what I use at the moment.
+REPO=$(git config remote.origin.url | sed 's!.*github[^:/]*[:/]\([^.]*\).*!\1!')
+
+if [ "$REPO" ]
+then
+    echo "$BASE/$REPO/$TAIL"
+else
+    exit 1
+fi
