@@ -1,13 +1,22 @@
-#!/bin/bash
+#!/usr/bin/ruby
 
-if git rev-parse -q --verify "$1" > /dev/null; then
-    pth="/commit/$(git rev-parse "$1")"
-elif [ "$1" ]; then
-    # Allow git hub /wiki
-    pth="$1"
-else
-    pth="/"
-fi
-# p;T;q = print the first match Then quit 
-base=$(git remote -v | sed -n 's,.*\@\(github.com\):*\(.*\).git.*,http://\1\2,p;T;q')
-${BROWSER-x-www-browser} "$base/$pth"
+arg = ARGV[0]
+
+path = if arg
+         `git rev-parse -q --verify #{arg} > /dev/null`
+         if $?.success?
+           "/commit/#{`git rev-parse #{arg}`}"
+         else
+           arg.gsub(%r{^/*}, '/')
+         end
+       else
+         "/"
+       end
+
+`git remote -v`.each_line do |line|
+  name, url = line.split("\t")
+  if name == "origin"
+    url =url.gsub(/github.*:([^ ]*) *.*/){ "https://github.com/#$1#{path}" }
+    exec 'x-www-browser', url
+  end
+end
