@@ -3,14 +3,13 @@
 # Fetch a pull request from github. Guesses the name of your repo from its `origin`
 # remote.
 #
-# e.g. git fetch-pull 8
+# e.g. git fetch-pr 8
 #
 # (relies on `wip/git-url` and `jq` for now)
 
 set -e
 
 t="$(mktemp XXXXX.json)"
-trap "rm $t" EXIT
 function json() {
     cat $t | jq -r "$@"
 }
@@ -22,6 +21,8 @@ if [ "$(json .message)" != "null" ]
 then
     echo "$(json .message)"
 else
-    echo "Fetching $(json .head.label)"
+    echo "Fetching $(json .head.repo.owner.login)/$(json .head.ref)"
     git fetch "$(json .head.repo.clone_url)" "$(json .head.ref)"
+    git branch "$(json .head.repo.owner.login)/$(json .head.ref)" "$(json .head.sha)"
 fi
+rm $t
