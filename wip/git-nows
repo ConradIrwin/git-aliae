@@ -4,8 +4,8 @@
 # tree and the index.
 # Goes to some lengths to avoid problems that could be caused by applying two mechanically
 # altered patches in sequence.
-to_work=`tempfile`
-to_index=`tempfile`
+to_work=`mktemp -t git-nows.XXX`
+to_index=`mktemp -t git-nows.XXX`
 
 # If there's no HEAD yet, use the empty tree
 head=$(git rev-parse --verify --quiet HEAD || echo "4b825dc642cb6eb9a060e54bf8d69288fbee4904")
