@@ -1,33 +1,40 @@
 #!/bin/bash -e
 
-# Removes whitespace errors (as configued by core.whitespace) from both the working
-# tree and the index.
-# Goes to some lengths to avoid problems that could be caused by applying two mechanically
-# altered patches in sequence.
+# Removes whitespace errors (as configued by core.whitespace).
+#
+# If no arguments are given removes uncommitted errors from the index and working tree,
+# If --all is given, removes all errors in the repository.
+# If a commit is given, removes all errors introduced since that commit.
 to_work=`mktemp -t git-nows.XXX`
 to_index=`mktemp -t git-nows.XXX`
 
+# The hash of an empty tree object (hard-coded into git)
+EMPTY_TREE="4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
 # If there's no HEAD yet, use the empty tree
-head=$(git rev-parse --verify --quiet HEAD || echo "4b825dc642cb6eb9a060e54bf8d69288fbee4904")
+head=$(git rev-parse --verify --quiet HEAD || echo $EMPTY_TREE)
 
 # The base from which to remove all whitespace changes
-from=$(git rev-parse --verify --quiet ${1:-$head})
+if [ "$1" = "--all" ]
+then
+  # Make a new empty commit
+  from=$(echo git-nows-tmp | git commit-tree $EMPTY_TREE)
+else
+  from=$(git rev-parse --verify --quiet ${1:-$head})
+fi
 
 # take a diff from HEAD to the working tree.
 git diff-index $from --full-index -p > $to_work
 
 # take a diff from $from to the index.
-git diff-index $from --cached --full-index -p > $to_index
+git diff-index $head --cached --full-index -p > $to_index
 
 # recreate the working tree without whitespace errors (throws away the index)
 git reset $from --hard
 [ -s $to_work ] && git apply $to_work --whitespace=fix
 
 # recreate the index without whitespace errors (preserves the working tree)
-git reset $from --mixed
+git reset $head --mixed
 [ -s $to_index ] && git apply $to_index --whitespace=fix --cached
-
-# reset head
-git reset $head --soft
 
 rm $to_index $to_head
