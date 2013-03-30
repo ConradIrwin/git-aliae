@@ -18,4 +18,3 @@ for(io('git log --pretty=format:"%d %h %p" ' . join(" ", map { "\"$_\"" } @branc
     say qq("$commit"[label="$label"]; ), map { qq("$_"->"$commit"; ) } @children;
 }
 say "}";
-

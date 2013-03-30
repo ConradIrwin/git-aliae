@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # usage: git shunt <branch>
-# 
+#
 # moves the most recent commit to the other branch
 # (useful if you've just realised that you committed in the wrong place!)
 if git rev-parse --verify "$1" >/dev/null

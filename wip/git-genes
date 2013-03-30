@@ -2,8 +2,8 @@
 require 'rubygems'
 require 'json'
 branch_names = {}
-branches =  `git branch | grep -v ' ->'`.strip.split(/\n../).map do |x| 
-  hash = `git rev-parse #{x}`.strip 
+branches =  `git branch | grep -v ' ->'`.strip.split(/\n../).map do |x|
+  hash = `git rev-parse #{x}`.strip
   branch_names[hash] = x
   hash
 end

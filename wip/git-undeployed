@@ -8,4 +8,3 @@ else
 fi
 
 git plog HEAD $branches --not $(git show-branch --merge-base HEAD $branches  | sed 's/ /^@ /g')^@
-
