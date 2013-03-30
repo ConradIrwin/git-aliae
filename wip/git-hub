@@ -1,4 +1,4 @@
 #!/bin/bash
 #
 # Opens the result of git-url in a browser
-x-www-browser $(git url "$@")
+$(which x-www-browser >/dev/null && echo "x-www-browser" || echo "open") $(git url "$@")
