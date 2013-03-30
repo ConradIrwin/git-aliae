@@ -1,1 +1,3 @@
-git rev-parse "$@" | xclip
+#!/bin/bash
+
+git rev-parse "$@" | (which xclip >/dev/null && xclip || pbcopy)
