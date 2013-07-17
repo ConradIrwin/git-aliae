@@ -27,11 +27,22 @@ else
     BASE="https://github.com"
 fi
 
+if [ "$1" == "--short" ]
+then
+    SHORT=true
+    shift
+else
+    SHORT=false
+fi
+
 if [ "$1" ]
 then
     if git rev-parse -q --verify "$1" >/dev/null
     then
         TAIL="commit/$(git rev-parse "$1")"
+    elif [ -e "$1" ]
+    then
+        TAIL="blob/master/$1"
     else
         TAIL="${1#/}"
     fi
@@ -47,9 +58,16 @@ fi
 # github:foo/bar <-- what I use at the moment.
 REPO=$(git config remote.origin.url | sed 's!.*github[^:/]*[:/]\([^.]*\).*!\1!')
 
-if [ "$REPO" ]
+if [ ! "$REPO" ]
 then
-    echo "$BASE/$REPO/$TAIL"
-else
     exit 1
 fi
+
+URL="$BASE/$REPO/$TAIL"
+
+if [ "$SHORT" = "true" ]
+then
+    URL=$(git io "$URL")
+fi
+
+echo $URL
