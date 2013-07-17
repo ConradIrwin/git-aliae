@@ -1,1 +1,1 @@
-curl --silent $(git url --api /issues?per_page=100) | jq -r '.[] | "\u001B[;34m" + if .pull_request.html_url then "  /pull/" else "/issues/" end + "\u001B[1m" + (.number | tostring) + "\u001B[0;31m @" + .user.login + "\u001B[0m " +  .title + " \u001B[;33m" + .created_at'
+curl --netrc --silent $(git url --api /issues?per_page=100) | jq -r '.[] | "\u001B[;34m" + if .pull_request.html_url then "  /pull/" else "/issues/" end + "\u001B[1m" + (.number | tostring) + "\u001B[0;31m @" + .user.login + "\u001B[0m " +  .title + " \u001B[;33m" + .created_at'
