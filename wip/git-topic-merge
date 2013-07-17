@@ -1,1 +1,39 @@
-/0/rapportive-oss/git-bits/bin/git-topic-merge
+#!/bin/bash
+
+if [ "$(echo "$@" | grep '\(--help\|-h\)')" ]
+then
+    cat <<'HEREDOC'
+git topic-merge <integration-branch> [<topic>=HEAD]
+
+Find the commit where the <topic> was merged into the <integration-branch>.
+
+TODO: At the moment this only works if <topic> is the last commit on the <topic>
+branch.
+
+i.e. you must have a structure like:
+
+    o-o-M-o-I
+       /
+    o-T
+
+    T: The HEAD of the topic branch just before it was merged.
+    I: The HEAD of the integration branch.
+    M: The merge that most recently merged topic with integration,
+
+If T has been directly merged into I several times, the most recent merge will
+be found:
+
+    o-o-M'-o-M-I
+       /    /
+    o-T----'
+
+See also: git-topic-base
+
+HEREDOC
+    exit 1
+fi
+
+integration=$(git rev-parse "${1?Usage: git topic-merge [-h] <integration> [<topic>]}")
+topic=$(git rev-parse "${2:-HEAD}")
+
+echo $(git rev-list --parents $integration | grep -m1 "[a-f0-9]\+ [a-f0-9]\+ $topic" | cut -d' ' -f 1)

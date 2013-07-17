@@ -1,1 +1,67 @@
-/0/rapportive-oss/git-bits/bin/git-topic-base
+#!/bin/bash -e
+if [ "$(echo "$@" | grep '\(--help\|-h\)')" ]
+then
+    cat <<'HEREDOC'
+git topic-base <integration-branch> [<topic>=HEAD]
+
+Find the base node on the <integration-branch> from which the <topic> diverged.
+This differs from the merge base if you've merged an earlier version of the
+topic into the integration branch.
+
+Graphically, this tool works on the following shape of history:
+
+    B-----O---O---M--- (integration)
+     \   /   /   /
+      `-T"--T'--T      (topic)
+
+    M: The merge that most recently merged topic with integration,
+       note that T is a direct parent of M.
+    O: Other merges of T into I, you can have as many of these as you like.
+    R: The base commit that this finds.
+    T: The HEAD of the topic branch just before it was merged.
+
+In particular, this won't work if you use fast-forward merging, nor if you have
+*ever* merged <integration> into <topic>.
+
+Once you have <base>, you can use it to generate a list of commits on the branch:
+
+    git log <topic> --not <base>
+
+or, when combined with topic-merge, pretty graphs:
+
+    git log --graph --oneline $(git topic-merge <topic>) --not <base>^@
+
+You can also use it to rebase the topic onto a master branch:
+
+    git checkout <topic>
+    git rebase --onto <master> <base>
+
+See also: git topic-merge
+
+HEREDOC
+    exit 1
+fi
+integration=${1?Usage: git topic-base [-h] <integration> [<topic>=HEAD]}
+topic=${2:-HEAD}
+
+merge=$(git topic-merge "$integration" "$topic")
+
+# TODO: This should be fixable, M is just the oldest commit in <integration>
+# that contains <topic>.
+[ "$merge" ] || (
+    echo "This only works on commits that have been merged directly into $integration, see git topic-base -h"
+    exit 1
+)
+
+# This works by assuming the graph shown above. Once we've found T, we can find
+# T' by finding M (by just scanning the log of <integration> until we find a
+# merge which included our commit as the non-first olive), and then finding the
+# merge-base of the two parents of M.
+# TODO: Try to catch edge cases!
+while [ $merge ]
+do
+    topic=$(git merge-base "$merge^" "$topic")
+    merge=$(git topic-merge "$integration" "$topic")
+done
+
+echo $topic

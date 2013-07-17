@@ -1,1 +1,1 @@
-git plog "${2:-HEAD}" --not $(git topic-base "$1" "${2:-HEAD}")
+git plog "${2:-HEAD}" --not $(git topic-base "${1:-master}" "${2:-HEAD}")
