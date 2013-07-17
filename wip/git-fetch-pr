@@ -9,20 +9,20 @@
 
 set -e
 
-t="$(mktemp XXXXX.json)"
+t="$(mktemp -t XXXXX.json)"
 function json() {
     cat $t | jq -r "$@"
 }
 
 echo "Fetching $(git url --api /pulls/$1)"
-curl -sS $(git url --api /pulls/$1) > $t
+curl --netrc -sS $(git url --api /pulls/$1) > $t
 
 if [ "$(json .message)" != "null" ]
 then
     echo "$(json .message)"
 else
     echo "Fetching $(json .head.repo.owner.login)/$(json .head.ref)"
-    git fetch "$(json .head.repo.clone_url)" "$(json .head.ref)"
+    git fetch "$(json .head.repo.ssh_url)" "$(json .head.ref)"
     git branch "$(json .head.repo.owner.login)/$(json .head.ref)" "$(json .head.sha)"
 fi
 rm $t
