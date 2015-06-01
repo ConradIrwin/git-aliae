@@ -1,0 +1,6 @@
+#!/bin/bash -e
+#
+# Delete branches that have been merged into master
+#
+#git branch --merged master | grep -v master | xargs git branch -d
+git branch -a --merged origin/master | sed -n 's,remotes/origin/,,p' | grep -v master | xargs git push origin --delete

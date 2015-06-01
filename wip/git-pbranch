@@ -1,0 +1,2 @@
+
+git branch  | tr -d '*' | xargs -n 1 git log -1 --format='%cI %Cgreen%h %Cred%aN%Cblue%d %Creset%s %C(yellow)(%cr)%Creset' | sort | cut -d' ' -f 2-
