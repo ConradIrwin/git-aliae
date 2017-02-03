@@ -1,0 +1,3 @@
+git reflog show HEAD | sed -n 's/.*moving from \([^ ]*\).*/\1/p' | head -n 5 | xargs -n 1 git log -1 --format="* %C(red)%D %Creset" $branch
+
+# | sed 's/HEAD -> //;s/ origin\/[^ ]*//g;s/, / /g'
