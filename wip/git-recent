@@ -1,3 +1,7 @@
-git reflog show HEAD | sed -n 's/.*moving from \([^ ]*\).*/\1/p' | head -n 5 | xargs -n 1 git log -1 --format="* %C(red)%D %Creset" $branch
+# git reflog show HEAD | sed -n 's/.*moving from \([^ ]*\).*/\1/p' | head -n 5 | xargs -n 1 git log -1 --format="* %C(red)%D %Creset" $branch
+#git reflog show HEAD --date=relative | grep checkout: | cut -d ' ' -f 1-4,8 | uniq -f 4 | grep 'minutes\|hours'
 
 # | sed 's/HEAD -> //;s/ origin\/[^ ]*//g;s/, / /g'
+#
+#
+git reflog show HEAD --date=relative | grep checkout: | cut -d ' ' -f 1-4,8 |  grep 'minutes\|hours' | grep -v '[a-f0-9]\{40\}' | uniq -f 4
