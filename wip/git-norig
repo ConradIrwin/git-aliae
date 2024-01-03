@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -name '*.orig' -or -name '*.BACKUP.*' -or -name '*.BASE.*' -or -name '*.LOCAL.*' -or -name '*.REMOTE.*' -or -name '*.un~' | xargs rm
+git ls-files -o --exclude-standard '*.orig' '*.BACKUP.*'  '*.BASE.*'  '*.LOCAL.*' '*.REMOTE.*' | xargs rm
