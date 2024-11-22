@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Squash paused commits into a single paused commit.
+
+# Find the hash of the first non-PAUSED commit
+first_non_paused=$(git log --format=%H --grep="PAUSED" --invert-grep -n 1)
+
+# If there's no non-PAUSED commit, use the initial commit
+if [ -z "$first_non_paused" ]; then
+    first_non_paused=$(git rev-list --max-parents=0 HEAD)
+fi
+
+# Count the number of PAUSED commits
+paused_count=$(git log --format=%H ${first_non_paused}..HEAD --grep="PAUSED" | wc -l)
+
+# If there are more than one PAUSED commits, squash them
+if [ $paused_count -gt 1 ]; then
+    git reset --soft ${first_non_paused}
+    git commit -m "PAUSED: Use \`git resume\` to continue working."
+    echo "Squashed $paused_count PAUSED commits."
+else
+    echo "No consecutive PAUSED commits to squash at the top of the branch."
+fi
